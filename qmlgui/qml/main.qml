@@ -25,13 +25,16 @@ ApplicationWindow {
     StackView {
         id: stackView
         anchors.fill: parent
-
         initialItem: MyBoardsPage {
             onOpenBoardRequested: function(boardId) {
-                stackView.push("BoardPage.qml", { "boardId": boardId })
+                stackView.push("BoardPage.qml", {
+                    "boardId": boardId,
+                    "stackViewRef": stackView   // <-- pass the stackView down
+                })
             }
         }
     }
+
 
     Dialog {
         id: errorDialog

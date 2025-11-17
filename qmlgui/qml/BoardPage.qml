@@ -7,6 +7,7 @@ Page {
     id: root
 
     property string boardId: ""
+    property var stackViewRef
     title: boardManager.currentBoardName
 
     // palette
@@ -18,8 +19,8 @@ Page {
 
     // helper so back button uses the Page's StackView context
     function goBack() {
-        if (StackView.view) {
-            StackView.view.pop()
+        if (stackViewRef) {
+            stackViewRef.pop()
         }
     }
 
@@ -230,7 +231,10 @@ Page {
                 }
 
                 onClicked: {
-                    StackView.view.push("StudyFlashcardsPage.qml", {
+                    if (!stackViewRef)
+                        return
+
+                    stackViewRef.push("StudyFlashcardsPage.qml", {
                         "boardId": root.boardId
                     })
                 }
@@ -254,16 +258,19 @@ Page {
                 }
 
                 onClicked: {
-                    StackView.view.push("AskAiPage.qml", {
+                    if (!stackViewRef)
+                        return
+
+                    stackViewRef.push("AskAiPage.qml", {
                         "boardId": root.boardId
                     })
                 }
             }
         }
-    }
 
-    Component.onCompleted: {
-        if (boardId.length > 0)
-            boardManager.selectBoard(boardId)
+        Component.onCompleted: {
+            if (boardId.length > 0)
+                boardManager.selectBoard(boardId)
+        }
     }
 }
