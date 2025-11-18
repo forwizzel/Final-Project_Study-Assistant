@@ -1,179 +1,175 @@
-Final-Project_Study-Assistant
+# Final-Project_Study-Assistant
 
 A Qt 6 + QML Study Assistant application built for a Software Engineering project.
 
 This guide shows how to install Qt Creator, clone the repo, open the project, and run it from source.
 
-1. Install Qt (with Qt Creator)
+---
 
-Go to:
-https://www.qt.io/download-open-source
+## Install Qt (with Qt Creator)
 
-Download the Qt Online Installer.
+1. Go to: https://www.qt.io/download-open-source  
+2. Download the **Qt Online Installer**.
+3. During installation, select:
 
-During installation, select:
+   **Qt Version (required):**
+   - Qt 6.x.x (**6.7 or newer recommended**)
 
-Qt Version (required):
+   **Toolchain (Windows):**
+   - MinGW 64-bit
 
-Qt 6.x.x (6.7 or newer recommended)
+   **IDE:**
+   - Qt Creator
 
-Toolchain (Windows):
+4. Finish installation and open **Qt Creator**.
 
-MinGW 64-bit
+---
 
-IDE:
+## Clone This Repository
 
-Qt Creator
+Clone using **Git** or **GitHub Desktop**.
 
-Finish installation and open Qt Creator.
+### Option A — Git (command line)
 
-2. Clone This Repository
+```bash
+git clone https://github.com/forwizzel/Final-Project_Study-Assistant.git'''
+```
 
-Clone using Git, GitHub Desktop, or Qt Creator.
+### Option B — GitHub Desktop
 
-Option A — Git (command line)
-git clone https://github.com/forwizzel/Final-Project_Study-Assistant.git
+1. Open GitHub Desktop
 
-Option B — GitHub Desktop
+2. Go to File → Clone Repository
 
-Open GitHub Desktop
+3. Paste the URL: https://github.com/forwizzel/Final-Project_Study-Assistant
 
-Go to File → Clone Repository
+4. Choose a local folder and clone.
 
-Paste the URL:
+---
 
-https://github.com/forwizzel/Final-Project_Study-Assistant
+## Open the Project in Qt Creator
 
-
-Choose a local folder and clone.
-
-Option C — Qt Creator (from Version Control)
-
-In Qt Creator, go to File → New Project → Projects from Version Control
-
-Choose Git
-
-Enter:
-
-https://github.com/forwizzel/Final-Project_Study-Assistant
-
-
-Select a local directory and clone.
-
-3. Open the Project in Qt Creator
-
-In Qt Creator, go to:
-File → Open File or Project
-
-Navigate to the cloned folder and select:
-
+**In Qt Creator:**
+1. Go to: File → Open File or Project
+2. Navigate to the cloned folder and select:
+```bash
 CMakeLists.txt
-
-
+```
 Qt Creator will detect this as a CMake + Qt Quick project.
 
-When prompted to configure kits, select:
+3. When prompted to configure kits, select:
+- Qt 6.x.x (**6.7 or newer**)
 
-Qt 6.x.x MinGW 64-bit (on Windows)
+> Note: If no kits appear:
+> - Open the Qt Maintenance Tool
+> - Make sure a Qt 6.x.x version and a compiler toolchain (e.g., MinGW 64-bit) are installed
 
-Or your appropriate Qt 6 kit on other platforms
+---
 
-If no kits appear:
+## Build and Run
 
-Open the Qt Maintenance Tool
-
-Make sure a Qt 6.x.x version and a compiler toolchain (e.g., MinGW 64-bit) are installed
-
-4. Build and Run
-
-Click the Run button (green play icon) in Qt Creator.
-
-On first run, CMake will configure the project automatically.
+**In Qt Creator:**
+1. Click the Run button (green play icon, bottom left) in Qt Creator.
+2. On first run, CMake will configure the project automatically.
 
 Qt Creator then builds the project and launches the application.
 
-Your QML frontend lives in:
-
+The QML frontend (UI) lives in:
+```bash
 src/qml/
+```
 
-
-Your backend C++ code lives in:
-
+The C++ backend code lives in:
+```bash
 src/
+```
 
 
-main.cpp loads the QML UI via QQmlApplicationEngine.
+> Note: main.cpp loads the QML UI via QQmlApplicationEngine.
 
-5. Project Structure
+---
+
+## Project Structure
+
+
 Final-Project_Study-Assistant/
+
 │
-├── CMakeLists.txt          ← main project file (open this in Qt Creator)
+
+├── CMakeLists.txt          ← *main project file (open this in Qt Creator)*
+
 ├── src/
-│   ├── main.cpp            ← entry point
-│   ├── qml.qrc             ← resource file bundling QML
+
+│   ├── main.cpp            ← *entry point*
+
+│   ├── qml.qrc             ← *resource file bundling QML*
+
 │   ├── qml/
-│   │   ├── Main.qml        ← root QML file
-│   │   ├── Pages/…         ← other UI pages
-│   │   └── Components/…    ← reusable QML components
-│   └── ... (other C++ files if added later)
+
+│   │   ├── Main.qml        ← *root QML file*
+
+│   │   ├── Pages/…         ← *other UI pages*
+
+│   │   └── Components/…    ← *reusable QML components*
+
+│   └── ... *(other C++ files if added later)*
+
 │
+
 └── README.md
 
-6. Troubleshooting
-Qt Creator says “No kits available”
+---
 
+## Troubleshooting
+
+### Qt Creator says “No kits available”
 This usually means no compiler / Qt version is configured.
 
 Fix:
 
-Open the Qt Maintenance Tool
+1. Open the Qt Maintenance Tool
 
-Ensure the following are installed:
+2. Ensure the following are installed:
+- Qt 6.x.x (with Qt Quick modules)
+- MinGW 64-bit (on Windows) or your platform compiler
+- Qt Creator
 
-Qt 6.x.x (with Qt Quick modules)
+3. Reopen the project and reconfigure kits.
 
-MinGW 64-bit (on Windows) or your platform compiler
-
-Qt Creator
-
-Then reopen the project and reconfigure kits.
-
-Design tab is greyed out
-
-This is normal for most .qml files.
-
+### Design tab is greyed out
 Only .ui.qml files support the drag-and-drop visual designer.
 
 Regular .qml files are edited in code mode only.
 
-The project uses standard .qml, so you’ll mostly work in the text editor view.
+The project uses standard .qml, so the designer will not work.
 
-Missing Qt modules / import errors
+### Missing Qt modules / import errors
 
 If you see errors like “module ‘QtQuick.Controls’ is not installed”, make sure your Qt installation includes:
-
-Qt Quick
-
-Qt Quick Controls 2
-
-Qt QML
-
-Qt Declarative
+- Qt Quick
+- Qt Quick Controls 2
+- Qt QML
+- Qt Declarative
 
 These typically come bundled with a normal Qt 6 desktop installation, but you can re-run the Qt Maintenance Tool to add them if needed.
 
-7. Running from Terminal (Optional)
+---
 
-You can also build and run the project manually via CMake.
+## Running from Terminal (Optional; I DO NOT RECCOMEND)
 
+You can build and run the project manually via CMake.
+
+```bash
 cd Final-Project_Study-Assistant
 mkdir build
 cd build
 cmake ..
 cmake --build .
-
+```
 
 Then run the generated executable from the build directory.
+
+---
 
 License
 This project is for educational use.
