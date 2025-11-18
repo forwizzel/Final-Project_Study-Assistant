@@ -33,13 +33,6 @@ Page {
                         StackView.view.pop()
                     }
                 }
-
-                contentItem: Label {
-                    text: parent.text
-                    color: colorLight
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
             }
 
             Label {
@@ -109,13 +102,6 @@ Page {
                     Button {
                         text: "Ask AI"
                         enabled: !studyController.isBusy
-
-                        contentItem: Label {
-                            text: parent.text
-                            color: colorDarkest
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
 
                         background: Rectangle {
                             radius: radius

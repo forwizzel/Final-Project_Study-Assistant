@@ -21,6 +21,8 @@ Page {
     function goBack() {
         if (stackViewRef) {
             stackViewRef.pop()
+        } else if (StackView.view) {
+            StackView.view.pop()
         }
     }
 
@@ -40,13 +42,6 @@ Page {
             ToolButton {
                 text: "\u25C0 Back"
                 onClicked: root.goBack()
-
-                contentItem: Label {
-                    text: parent.text
-                    color: colorLight
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
             }
 
             Label {
@@ -185,19 +180,12 @@ Page {
                     Layout.fillWidth: true
                     Item { Layout.fillWidth: true }
 
-                    Button {
-                        text: "Add Note"
+            Button {
+                text: "Add Note"
 
-                        contentItem: Label {
-                            text: parent.text
-                            color: colorDarkest
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-
-                        background: Rectangle {
-                            radius: radius
-                            color: colorMedium
+                background: Rectangle {
+                    radius: radius
+                    color: colorMedium
                         }
 
                         onClicked: {
@@ -221,13 +209,6 @@ Page {
                 Layout.fillWidth: true
                 enabled: boardManager && boardManager.currentBoardNotes.length > 0
 
-                contentItem: Label {
-                    text: parent.text
-                    color: colorDarkest
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-
                 background: Rectangle {
                     radius: radius
                     color: colorMedium
@@ -247,13 +228,6 @@ Page {
                 text: "Ask AI"
                 Layout.fillWidth: true
                 enabled: boardManager && boardManager.currentBoardNotes.length > 0
-
-                contentItem: Label {
-                    text: parent.text
-                    color: colorDarkest
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
 
                 background: Rectangle {
                     radius: radius

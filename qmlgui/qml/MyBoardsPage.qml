@@ -64,13 +64,6 @@ Item {
                 text: "New Board"
                 Layout.preferredWidth: 140
 
-                contentItem: Label {
-                    text: parent.text
-                    color: colorDarkest
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-
                 background: Rectangle {
                     radius: radius
                     color: colorMedium
@@ -145,13 +138,6 @@ Item {
                         Button {
                             text: "Open"
 
-                            contentItem: Label {
-                                text: parent.text
-                                color: colorDarkest
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
                             background: Rectangle {
                                 radius: radius
                                 color: colorMedium
@@ -167,13 +153,6 @@ Item {
 
                         Button {
                             text: "Delete"
-
-                            contentItem: Label {
-                                text: parent.text
-                                color: colorLight
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
 
                             background: Rectangle {
                                 radius: radius
