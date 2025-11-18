@@ -66,15 +66,33 @@ CMakeLists.txt
 Qt Creator will detect this as a CMake + Qt Quick project.
 
 3. When prompted to configure kits, select:
-- Qt 6.x.x (**must be 6.7 or newer**)
+```bash
+Qt 6.7.3
+```
 
 > Note: If no kits appear:
 > - Open the Qt Maintenance Tool
-> - Make sure a Qt 6.x.x version and a compiler toolchain (e.g., MinGW 64-bit) are installed
+> - Make sure a Qt 6.7.3 version and a compiler toolchain (e.g., MinGW 64-bit) are installed
 
 ---
 
 ## Build and Run
+
+### IMPORTANT!:
+Navigate to "Projects" (left side bar), click to "Run Settings" (top of projects page), and right under run settings you will see:
+```bash
+"Active run configuration:"
+```
+with a drop down including the options:
+- flashcard_cli
+- study_assistant_qml.
+
+ **You must** select **study_assistant_qml**
+
+> Selecting flashcard_cli will cause the program to run unexpectedly
+
+Once you've done that, continue:
+
 
 **In Qt Creator:**
 1. Click the Run button (green play icon, bottom left) in Qt Creator.
