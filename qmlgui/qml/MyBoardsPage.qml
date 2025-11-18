@@ -80,10 +80,12 @@ Item {
                     var name = newBoardName.text.trim()
                     if (name === "")
                         name = "Untitled Board"
-                    var id = boardManager.createBoard(name)
-                    newBoardName.text = ""
-                    boardManager.selectBoard(id)
-                    root.openBoardRequested(id)
+                    if (boardManager) {
+                        var id = boardManager.createBoard(name)
+                        newBoardName.text = ""
+                        boardManager.selectBoard(id)
+                        root.openBoardRequested(id)
+                    }
                 }
             }
         }
@@ -106,7 +108,7 @@ Item {
                 anchors.fill: parent
                 clip: true
                 spacing: 10
-                model: boardManager.boards
+                model: boardManager ? boardManager.boards : []
 
                 delegate: Frame {
                     width: ListView.view.width
@@ -156,8 +158,10 @@ Item {
                             }
 
                             onClicked: {
-                                boardManager.selectBoard(modelData.id)
-                                root.openBoardRequested(modelData.id)
+                                if (boardManager) {
+                                    boardManager.selectBoard(modelData.id)
+                                    root.openBoardRequested(modelData.id)
+                                }
                             }
                         }
 
@@ -176,7 +180,10 @@ Item {
                                 color: "#b00020"
                             }
 
-                            onClicked: boardManager.deleteBoard(modelData.id)
+                            onClicked: {
+                                if (boardManager)
+                                    boardManager.deleteBoard(modelData.id)
+                            }
                         }
                     }
                 }

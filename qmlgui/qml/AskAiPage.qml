@@ -60,11 +60,12 @@ Page {
         spacing: 12
 
         GroupBox {
+            id: questionGroup
             title: "Your question"
             Layout.fillWidth: true
 
             label: Label {
-                text: control.title
+                text: questionGroup.title
                 color: colorMedium
                 font.bold: true
             }
@@ -130,12 +131,13 @@ Page {
         }
 
         GroupBox {
+            id: answerGroup
             title: "AI answer"
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             label: Label {
-                text: control.title
+                text: answerGroup.title
                 color: colorMedium
                 font.bold: true
             }

@@ -8,7 +8,7 @@ Page {
 
     property string boardId: ""
     property var stackViewRef
-    title: boardManager.currentBoardName
+    title: boardManager ? boardManager.currentBoardName : ""
 
     // palette
     property color colorLight: "#EDE8ED"
@@ -50,7 +50,7 @@ Page {
             }
 
             Label {
-                text: boardManager.currentBoardName
+                text: boardManager ? boardManager.currentBoardName : ""
                 font.pixelSize: 22
                 font.bold: true
                 color: colorLight
@@ -68,12 +68,13 @@ Page {
 
         // NOTES LIST
         GroupBox {
+            id: notesGroup
             title: "Notes in this board"
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             label: Label {
-                text: control.title
+                text: notesGroup.title
                 color: colorMedium
                 font.pixelSize: 14
                 font.bold: true
@@ -96,7 +97,7 @@ Page {
                     Layout.fillHeight: true
                     clip: true
                     spacing: 8
-                    model: boardManager.currentBoardNotes
+                    model: boardManager ? boardManager.currentBoardNotes : []
 
                     delegate: Frame {
                         width: ListView.view.width
@@ -128,7 +129,8 @@ Page {
                             acceptedButtons: Qt.RightButton
                             onClicked: {
                                 if (mouse.button === Qt.RightButton) {
-                                    boardManager.deleteNoteFromCurrentBoard(modelData.index)
+                                    if (boardManager)
+                                        boardManager.deleteNoteFromCurrentBoard(modelData.index)
                                 }
                             }
                         }
@@ -141,11 +143,12 @@ Page {
 
         // ADD NOTE
         GroupBox {
+            id: addNoteGroup
             title: "Add note"
             Layout.fillWidth: true
 
             label: Label {
-                text: control.title
+                text: addNoteGroup.title
                 color: colorMedium
                 font.pixelSize: 14
                 font.bold: true
@@ -198,7 +201,7 @@ Page {
                         }
 
                         onClicked: {
-                            if (noteInput.text.trim().length === 0)
+                            if (noteInput.text.trim().length === 0 || !boardManager)
                                 return
                             boardManager.addNoteToCurrentBoard(noteInput.text)
                             noteInput.text = ""
@@ -216,7 +219,7 @@ Page {
             Button {
                 text: "Study Flashcards"
                 Layout.fillWidth: true
-                enabled: boardManager.currentBoardNotes.length > 0
+                enabled: boardManager && boardManager.currentBoardNotes.length > 0
 
                 contentItem: Label {
                     text: parent.text
@@ -243,7 +246,7 @@ Page {
             Button {
                 text: "Ask AI"
                 Layout.fillWidth: true
-                enabled: boardManager.currentBoardNotes.length > 0
+                enabled: boardManager && boardManager.currentBoardNotes.length > 0
 
                 contentItem: Label {
                     text: parent.text
@@ -269,7 +272,7 @@ Page {
         }
 
         Component.onCompleted: {
-            if (boardId.length > 0)
+            if (boardId.length > 0 && boardManager)
                 boardManager.selectBoard(boardId)
         }
     }
