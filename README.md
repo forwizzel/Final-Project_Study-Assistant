@@ -6,7 +6,7 @@ This guide shows how to install Qt Creator, clone the repo, open the project, an
 
 ---
 
-## Install Qt (with Qt Creator)
+## Install Qt Creator
 
 1. Go to: https://www.qt.io/download-open-source  
 2. Download the **Qt Online Installer**.
@@ -32,7 +32,7 @@ Clone using **Git** or **GitHub Desktop**.
 ### Option A — Git (command line)
 
 ```bash
-git clone https://github.com/forwizzel/Final-Project_Study-Assistant.git'''
+git clone https://github.com/forwizzel/Final-Project_Study-Assistant.git
 ```
 
 ### Option B — GitHub Desktop
@@ -51,14 +51,14 @@ git clone https://github.com/forwizzel/Final-Project_Study-Assistant.git'''
 
 **In Qt Creator:**
 1. Go to: File → Open File or Project
-2. Navigate to the cloned folder and select:
+2. Navigate to the cloned project and select:
 ```bash
 CMakeLists.txt
 ```
 Qt Creator will detect this as a CMake + Qt Quick project.
 
 3. When prompted to configure kits, select:
-- Qt 6.x.x (**6.7 or newer**)
+- Qt 6.x.x (**must be 6.7 or newer**)
 
 > Note: If no kits appear:
 > - Open the Qt Maintenance Tool
@@ -74,49 +74,15 @@ Qt Creator will detect this as a CMake + Qt Quick project.
 
 Qt Creator then builds the project and launches the application.
 
-The QML frontend (UI) lives in:
+The QML frontend (UI) is in:
 ```bash
 src/qml/
 ```
 
-The C++ backend code lives in:
+The C++ backend code is in:
 ```bash
 src/
 ```
-
-
-> Note: main.cpp loads the QML UI via QQmlApplicationEngine.
-
----
-
-## Project Structure
-
-
-Final-Project_Study-Assistant/
-
-│
-
-├── CMakeLists.txt          ← *main project file (open this in Qt Creator)*
-
-├── src/
-
-│   ├── main.cpp            ← *entry point*
-
-│   ├── qml.qrc             ← *resource file bundling QML*
-
-│   ├── qml/
-
-│   │   ├── Main.qml        ← *root QML file*
-
-│   │   ├── Pages/…         ← *other UI pages*
-
-│   │   └── Components/…    ← *reusable QML components*
-
-│   └── ... *(other C++ files if added later)*
-
-│
-
-└── README.md
 
 ---
 
@@ -139,9 +105,7 @@ Fix:
 ### Design tab is greyed out
 Only .ui.qml files support the drag-and-drop visual designer.
 
-Regular .qml files are edited in code mode only.
-
-The project uses standard .qml, so the designer will not work.
+Regular .qml files are edited in code mode only and I used standard .qml to work better with backend integration, so the designer does not work.
 
 ### Missing Qt modules / import errors
 
@@ -151,13 +115,13 @@ If you see errors like “module ‘QtQuick.Controls’ is not installed”, mak
 - Qt QML
 - Qt Declarative
 
-These typically come bundled with a normal Qt 6 desktop installation, but you can re-run the Qt Maintenance Tool to add them if needed.
+These typically come with the normal Qt 6 desktop installation, but you can re-run the Qt Maintenance Tool to add them if you dont have them for any reason.
 
 ---
 
-## Running from Terminal (Optional; I DO NOT RECCOMEND)
+## Running the project from Terminal (I DO NOT RECCOMMEND)
 
-You can build and run the project manually via CMake.
+You can build and run the project manually via CMake with:
 
 ```bash
 cd Final-Project_Study-Assistant
