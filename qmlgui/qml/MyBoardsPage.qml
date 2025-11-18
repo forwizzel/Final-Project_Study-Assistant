@@ -37,7 +37,7 @@ Item {
                 spacing: 4
 
                 Label {
-                    text: "My Boards"
+                    text: "IDEABOARD+"
                     font.pixelSize: 30
                     font.bold: true
                     color: colorLight
@@ -45,7 +45,7 @@ Item {
                 }
 
                 Label {
-                    text: "Organize topics and jump back into studying fast"
+                    text: "MyBoards"
                     color: colorMedium
                     font.pixelSize: 14
                 }
