@@ -331,21 +331,27 @@ void AiClient::onReplyFinished(QNetworkReply *reply)
 
     QByteArray data = reply->readAll();
     reply->deleteLater();
-
     QString requestType = reply->property("ai_request_type").toByteArray();
 
     QString parseError;
     if (requestType == QByteArrayLiteral("ask")) {
         QString answer = parseAnswerFromResponse(data, parseError);
         if (!parseError.isEmpty()) {
-            emit errorOccurred(parseError);
+            // Include a short snippet of the raw response to aid debugging.
+            QString snippet = QString::fromUtf8(data).left(800);
+            QString msg = QStringLiteral("AI parse error: %1\nResponse snippet: %2").arg(parseError, snippet);
+            qWarning() << msg;
+            emit errorOccurred(msg);
         } else {
             emit answerReady(answer);
         }
     } else {
         QVector<Flashcard> cards = parseFlashcardsFromResponse(data, parseError);
         if (!parseError.isEmpty()) {
-            emit errorOccurred(parseError);
+            QString snippet = QString::fromUtf8(data).left(800);
+            QString msg = QStringLiteral("AI parse error: %1\nResponse snippet: %2").arg(parseError, snippet);
+            qWarning() << msg;
+            emit errorOccurred(msg);
         } else {
             emit flashcardsReady(cards);
         }
