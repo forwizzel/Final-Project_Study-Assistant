@@ -43,11 +43,13 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
     // If forced to use local generator, bypass AI client even when present.
     if (m_useLocalFlashcards) {
         qDebug() << "Using local FlashcardGenerator for boardId:" << boardId;
+        m_lastNotes = notes;
         QVector<Flashcard> cards = m_generator.generateFromText(notes);
         handleFlashcardsReady(cards);
         return;
     }
 
+    m_lastNotes = notes;
     if (m_aiClient) {
         qDebug() << "Requesting flashcards from AI for boardId:" << boardId;
         m_aiClient->requestFlashcards(notes);
@@ -99,6 +101,17 @@ void StudyController::setAiApiKey(const QString &key)
 void StudyController::handleFlashcardsReady(const QVector<Flashcard> &cards)
 {
     qDebug() << "handleFlashcardsReady: got" << cards.size() << "cards";
+
+    if (cards.isEmpty()) {
+        // If AI returned nothing, fall back to deterministic local generator
+        qDebug() << "AI returned 0 cards, falling back to local generator";
+        QVector<Flashcard> local = m_generator.generateFromText(m_lastNotes);
+        m_flashcardModel.setFlashcards(local);
+        emit flashcardsChanged();
+        setBusy(false);
+        return;
+    }
+
     m_flashcardModel.setFlashcards(cards);
     emit flashcardsChanged();
     setBusy(false);
@@ -114,6 +127,21 @@ void StudyController::handleAnswerReady(const QString &answer)
 void StudyController::handleAiError(const QString &message)
 {
     qDebug() << "handleAiError:" << message;
+
+    // If AI errors and local generation is allowed, fall back to local generator
+    if (!m_useLocalFlashcards) {
+        qDebug() << "Falling back to local generator due to AI error.";
+        QVector<Flashcard> local = m_generator.generateFromText(m_lastNotes);
+        if (!local.isEmpty()) {
+            m_flashcardModel.setFlashcards(local);
+            emit flashcardsChanged();
+            // notify user that AI failed but local generator was used
+            emit errorOccurred(QStringLiteral("AI error: %1\nUsing local generator instead.").arg(message));
+            setBusy(false);
+            return;
+        }
+    }
+
     emit errorOccurred(message);
     setBusy(false);
 }

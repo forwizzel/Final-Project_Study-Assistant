@@ -35,6 +35,7 @@ signals:
     void lastAiAnswerChanged();
     void isBusyChanged();
     void errorOccurred(const QString &msg);
+    void useLocalFlashcardsChanged();
 
 private:
     void setBusy(bool busy);
