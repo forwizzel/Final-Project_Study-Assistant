@@ -151,6 +151,53 @@ QVector<Flashcard> AiClient::parseFlashcardsFromResponse(const QByteArray &data,
             arr = obj.value(QStringLiteral("flashcards")).toArray();
         } else if (obj.value(QStringLiteral("cards")).isArray()) {
             arr = obj.value(QStringLiteral("cards")).toArray();
+        } else if (obj.value(QStringLiteral("data")).isArray()) {
+            // Some APIs wrap results in a `data` array.
+            arr = obj.value(QStringLiteral("data")).toArray();
+        } else if (obj.value(QStringLiteral("result")).isArray()) {
+            arr = obj.value(QStringLiteral("result")).toArray();
+        } else if (obj.contains(QStringLiteral("choices")) && obj.value(QStringLiteral("choices")).isArray()) {
+            // Handle OpenAI-style responses where choices[0].message.content contains
+            // a JSON string representing the array of flashcards. Try to extract
+            // and parse that JSON string.
+            QJsonArray choices = obj.value(QStringLiteral("choices")).toArray();
+            if (!choices.isEmpty() && choices.first().isObject()) {
+                QJsonObject choiceObj = choices.first().toObject();
+                // Support both older and newer OpenAI shapes
+                QJsonValue messageVal = choiceObj.value(QStringLiteral("message"));
+                if (messageVal.isObject()) {
+                    QJsonObject messageObj = messageVal.toObject();
+                    QJsonValue contentVal = messageObj.value(QStringLiteral("content"));
+                    if (contentVal.isString()) {
+                        QByteArray nested = contentVal.toString().toUtf8();
+                        QJsonParseError nestedErr;
+                        QJsonDocument nestedDoc = QJsonDocument::fromJson(nested, &nestedErr);
+                        if (nestedErr.error == QJsonParseError::NoError) {
+                            if (nestedDoc.isArray()) {
+                                arr = nestedDoc.array();
+                            } else if (nestedDoc.isObject()) {
+                                QJsonObject nestedObj = nestedDoc.object();
+                                if (nestedObj.value(QStringLiteral("flashcards")).isArray()) {
+                                    arr = nestedObj.value(QStringLiteral("flashcards")).toArray();
+                                } else if (nestedObj.value(QStringLiteral("cards")).isArray()) {
+                                    arr = nestedObj.value(QStringLiteral("cards")).toArray();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (obj.contains(QStringLiteral("error"))) {
+            // Surface server-provided error messages.
+            QJsonValue errVal = obj.value(QStringLiteral("error"));
+            if (errVal.isString()) {
+                errorOut = errVal.toString();
+            } else if (errVal.isObject()) {
+                QJsonObject errObj = errVal.toObject();
+                if (errObj.contains(QStringLiteral("message")) && errObj.value(QStringLiteral("message")).isString()) {
+                    errorOut = errObj.value(QStringLiteral("message")).toString();
+                }
+            }
         }
     }
 
