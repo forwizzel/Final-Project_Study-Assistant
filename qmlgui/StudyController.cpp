@@ -69,6 +69,16 @@ void StudyController::askAiAboutBoard(const QString &boardId, const QString &que
     }
 }
 
+void StudyController::setAiEndpoint(const QString &url)
+{
+    if (m_aiClient) m_aiClient->setEndpointOverride(url);
+}
+
+void StudyController::setAiApiKey(const QString &key)
+{
+    if (m_aiClient) m_aiClient->setApiKeyOverride(key);
+}
+
 void StudyController::handleFlashcardsReady(const QVector<Flashcard> &cards)
 {
     m_flashcardModel.setFlashcards(cards);

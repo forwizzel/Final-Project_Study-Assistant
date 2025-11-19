@@ -13,6 +13,10 @@
 class AiClient : public QObject
 {
     Q_OBJECT
+
+public:
+    Q_INVOKABLE void setEndpointOverride(const QString &url);
+    Q_INVOKABLE void setApiKeyOverride(const QString &key);
 public:
     explicit AiClient(QObject *parent = nullptr);
 
@@ -37,6 +41,8 @@ private:
     QUrl endpointFromEnv(const char *envName, const QString &fallbackEnv) const;
 
     QNetworkAccessManager m_manager;
+    QString m_endpointOverride;
+    QByteArray m_apiKeyOverride;
 };
 
 #endif // CORE_AI_CLIENT_H

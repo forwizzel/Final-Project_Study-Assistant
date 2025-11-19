@@ -24,6 +24,8 @@ public:
 
     Q_INVOKABLE void generateFlashcardsForBoard(const QString &boardId);
     Q_INVOKABLE void askAiAboutBoard(const QString &boardId, const QString &question);
+    Q_INVOKABLE void setAiEndpoint(const QString &url);
+    Q_INVOKABLE void setAiApiKey(const QString &key);
 
 signals:
     void flashcardsChanged();

@@ -183,6 +183,30 @@ To test quickly, open the app and use the AI features — the app will POST
 JSON like `{"notes": "..."}` to the endpoint and expects a JSON array of
 objects with `question` and `answer` fields in response.
 
+Note for Qt Creator users
+
+- When running the app from **Qt Creator**, the environment variables you
+   export in a separate shell (e.g. `export AI_API_ENDPOINT=...`) are not
+   automatically inherited. To set the endpoint inside Qt Creator go to:
+
+   Projects → Run → Run Settings → Environment → Add...
+
+   and add `AI_API_ENDPOINT` (or `AI_FLASHCARDS_ENDPOINT` / `AI_ASK_ENDPOINT`) with the desired URL.
+
+- Alternatively you can change the endpoint at runtime from QML because the
+   app exposes runtime setters. From QML (or a debug console) call:
+
+```js
+// set the endpoint to the Cloudflare worker
+studyController.setAiEndpoint("https://ai-study-app.mhess0308.workers.dev/")
+
+// optionally set an API key
+studyController.setAiApiKey("your-key-here")
+```
+
+This is useful for testing inside Qt Creator without changing the IDE run
+environment.
+
 
 License
 This project is for educational use.

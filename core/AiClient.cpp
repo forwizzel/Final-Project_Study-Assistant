@@ -18,6 +18,16 @@ AiClient::AiClient(QObject *parent)
             this, &AiClient::onReplyFinished);
 }
 
+void AiClient::setEndpointOverride(const QString &url)
+{
+    m_endpointOverride = url.trimmed();
+}
+
+void AiClient::setApiKeyOverride(const QString &key)
+{
+    m_apiKeyOverride = key.toUtf8();
+}
+
 void AiClient::requestFlashcards(const QString &notes)
 {
     if (notes.trimmed().isEmpty()) {
@@ -35,7 +45,12 @@ void AiClient::requestFlashcards(const QString &notes)
     req.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
 
     // If AI_API_KEY env var exists, add Authorization header
-    QByteArray apiKey = qgetenv("AI_API_KEY");
+    QByteArray apiKey;
+    if (!m_apiKeyOverride.isEmpty()) {
+        apiKey = m_apiKeyOverride;
+    } else {
+        apiKey = qgetenv("AI_API_KEY");
+    }
     if (!apiKey.isEmpty()) {
         QByteArray bearer = "Bearer " + apiKey;
         req.setRawHeader("Authorization", bearer);
@@ -65,9 +80,14 @@ void AiClient::requestAnswer(const QString &notes, const QString &question)
     QNetworkRequest req(url);
     req.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
 
-    QByteArray apiKey = qgetenv("AI_API_KEY");
-    if (!apiKey.isEmpty()) {
-        QByteArray bearer = "Bearer " + apiKey;
+    QByteArray apiKey2;
+    if (!m_apiKeyOverride.isEmpty()) {
+        apiKey2 = m_apiKeyOverride;
+    } else {
+        apiKey2 = qgetenv("AI_API_KEY");
+    }
+    if (!apiKey2.isEmpty()) {
+        QByteArray bearer = "Bearer " + apiKey2;
         req.setRawHeader("Authorization", bearer);
     }
 
@@ -207,6 +227,11 @@ QString AiClient::parseAnswerFromResponse(const QByteArray &data, QString &error
 
 QUrl AiClient::endpointFromEnv(const char *envName, const QString &fallbackEnv) const
 {
+    // If code has an override set at runtime, use it first.
+    if (!m_endpointOverride.isEmpty()) {
+        return QUrl(m_endpointOverride);
+    }
+
     QByteArray envValue = qgetenv(envName);
     if (!envValue.isEmpty()) {
         return QUrl(QString::fromUtf8(envValue));
