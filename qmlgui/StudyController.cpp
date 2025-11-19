@@ -35,10 +35,21 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
 {
     if (!m_boardManager) return;
 
-    QString notes = m_boardManager->allNotesForBoard(boardId);
-    qDebug() << "generateFlashcardsForBoard called for boardId:" << boardId << "notes length:" << notes.length();
+    QString effectiveBoardId = boardId;
+    if (effectiveBoardId.isEmpty()) {
+        // If no boardId provided, use the currently selected board in BoardManager
+        effectiveBoardId = m_boardManager->currentBoardId();
+    }
+
+    if (effectiveBoardId.isEmpty()) {
+        emit errorOccurred(QStringLiteral("No board selected. Select a board before generating flashcards."));
+        return;
+    }
+
+    QString notes = m_boardManager ? m_boardManager->allNotesForBoard(effectiveBoardId) : QString();
+    qDebug() << "generateFlashcardsForBoard called for boardId:" << effectiveBoardId << "notes length:" << notes.length();
     if (notes.trimmed().isEmpty()) {
-        emit errorOccurred("This board has no notes.");
+        emit errorOccurred(QStringLiteral("Selected board has no notes."));
         return;
     }
 
@@ -46,7 +57,7 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
 
     // If forced to use local generator, bypass AI client even when present.
     if (m_useLocalFlashcards) {
-        qDebug() << "Using local FlashcardGenerator for boardId:" << boardId;
+        qDebug() << "Using local FlashcardGenerator for boardId:" << effectiveBoardId;
         m_lastNotes = notes;
         QVector<Flashcard> cards = m_generator.generateFromText(notes);
         handleFlashcardsReady(cards);
@@ -55,7 +66,7 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
 
     m_lastNotes = notes;
     if (m_aiClient) {
-        qDebug() << "Requesting flashcards from AI for boardId:" << boardId;
+        qDebug() << "Requesting flashcards from AI for boardId:" << effectiveBoardId;
         m_aiClient->requestFlashcards(notes);
     } else {
         QVector<Flashcard> cards = m_generator.generateFromText(notes);
