@@ -343,7 +343,8 @@ void AiClient::onReplyFinished(QNetworkReply *reply)
             qWarning() << msg;
             emit errorOccurred(msg);
         } else {
-            emit answerReady(answer);
+                qDebug() << "AiClient::onReplyFinished: answerReady" << answer.left(200);
+                emit answerReady(answer);
         }
     } else {
         QVector<Flashcard> cards = parseFlashcardsFromResponse(data, parseError);
@@ -353,7 +354,8 @@ void AiClient::onReplyFinished(QNetworkReply *reply)
             qWarning() << msg;
             emit errorOccurred(msg);
         } else {
-            emit flashcardsReady(cards);
+                qDebug() << "AiClient::onReplyFinished: flashcardsReady count=" << cards.size();
+                emit flashcardsReady(cards);
         }
     }
 }

@@ -113,6 +113,21 @@ Page {
                     visible: running
                 }
 
+                // Toggle to force using the local deterministic generator
+                CheckBox {
+                    id: localToggle
+                    checked: false
+                    text: "Local generator"
+                    onClicked: studyController.setUseLocalFlashcards(checked)
+                    contentItem: Label {
+                        text: parent.text
+                        color: colorLight
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                    }
+                }
+
                 Button {
                     text: "Regenerate"
                     enabled: !studyController.isBusy

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QString>
 #include <QVector>
 #include "Flashcard.h"
 

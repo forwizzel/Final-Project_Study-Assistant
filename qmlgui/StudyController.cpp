@@ -13,6 +13,13 @@ StudyController::StudyController(BoardManager *manager, AiClient *aiClient, QObj
     }
 }
 
+void StudyController::setUseLocalFlashcards(bool useLocal)
+{
+    if (m_useLocalFlashcards == useLocal) return;
+    m_useLocalFlashcards = useLocal;
+    emit useLocalFlashcardsChanged();
+}
+
 void StudyController::setBusy(bool busy)
 {
     if (m_isBusy == busy) return;
@@ -25,6 +32,7 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
     if (!m_boardManager) return;
 
     QString notes = m_boardManager->allNotesForBoard(boardId);
+    qDebug() << "generateFlashcardsForBoard called for boardId:" << boardId << "notes length:" << notes.length();
     if (notes.trimmed().isEmpty()) {
         emit errorOccurred("This board has no notes.");
         return;
@@ -32,7 +40,16 @@ void StudyController::generateFlashcardsForBoard(const QString &boardId)
 
     setBusy(true);
 
+    // If forced to use local generator, bypass AI client even when present.
+    if (m_useLocalFlashcards) {
+        qDebug() << "Using local FlashcardGenerator for boardId:" << boardId;
+        QVector<Flashcard> cards = m_generator.generateFromText(notes);
+        handleFlashcardsReady(cards);
+        return;
+    }
+
     if (m_aiClient) {
+        qDebug() << "Requesting flashcards from AI for boardId:" << boardId;
         m_aiClient->requestFlashcards(notes);
     } else {
         QVector<Flashcard> cards = m_generator.generateFromText(notes);
@@ -81,6 +98,7 @@ void StudyController::setAiApiKey(const QString &key)
 
 void StudyController::handleFlashcardsReady(const QVector<Flashcard> &cards)
 {
+    qDebug() << "handleFlashcardsReady: got" << cards.size() << "cards";
     m_flashcardModel.setFlashcards(cards);
     emit flashcardsChanged();
     setBusy(false);
@@ -95,6 +113,7 @@ void StudyController::handleAnswerReady(const QString &answer)
 
 void StudyController::handleAiError(const QString &message)
 {
+    qDebug() << "handleAiError:" << message;
     emit errorOccurred(message);
     setBusy(false);
 }
