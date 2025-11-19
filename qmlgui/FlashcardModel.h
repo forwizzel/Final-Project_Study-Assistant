@@ -7,6 +7,7 @@
 class FlashcardModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 public:
     enum Roles {
         QuestionRole = Qt::UserRole + 1,
@@ -21,6 +22,13 @@ public:
 
     void setFlashcards(const QVector<Flashcard> &cards);
     const QVector<Flashcard>& flashcards() const { return m_cards; }
+
+signals:
+    void countChanged();
+
+public:
+    Q_INVOKABLE QString questionAt(int index) const;
+    Q_INVOKABLE QString answerAt(int index) const;
 
 private:
     QVector<Flashcard> m_cards;

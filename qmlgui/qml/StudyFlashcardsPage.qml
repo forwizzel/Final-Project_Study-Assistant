@@ -146,7 +146,7 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            sourceComponent: studyController.flashcardModel.rowCount > 0
+            sourceComponent: studyController.flashcardModel.count > 0
                              ? cardComponent
                              : emptyComponent
         }
@@ -189,14 +189,14 @@ Page {
                     onClicked: {
                         if (currentIndex > 0)
                             currentIndex--
-                        cardLoader.sourceComponent = studyController.flashcardModel.rowCount > 0
+                        cardLoader.sourceComponent = studyController.flashcardModel.count > 0
                                                     ? cardComponent : emptyComponent
                     }
                 }
 
                 Button {
                     text: "Next"
-                    enabled: currentIndex < studyController.flashcardModel.rowCount - 1
+                    enabled: currentIndex < studyController.flashcardModel.count - 1
 
                     contentItem: Label {
                         text: parent.text
@@ -214,9 +214,9 @@ Page {
                     }
 
                     onClicked: {
-                        if (currentIndex < studyController.flashcardModel.rowCount - 1)
+                        if (currentIndex < studyController.flashcardModel.count - 1)
                             currentIndex++
-                        cardLoader.sourceComponent = studyController.flashcardModel.rowCount > 0
+                        cardLoader.sourceComponent = studyController.flashcardModel.count > 0
                                                     ? cardComponent : emptyComponent
                     }
                 }
@@ -224,8 +224,8 @@ Page {
                 Item { Layout.fillWidth: true }
 
                 Label {
-                    text: studyController.flashcardModel.rowCount > 0
-                          ? (currentIndex + 1) + " / " + studyController.flashcardModel.rowCount
+                      text: studyController.flashcardModel.count > 0
+                          ? (currentIndex + 1) + " / " + studyController.flashcardModel.count
                           : "No flashcards"
                     color: colorLight
                     font.bold: true
@@ -254,9 +254,7 @@ Page {
                 spacing: 14
 
                 Text {
-                    text: studyController.flashcardModel.data(
-                              studyController.flashcardModel.index(root.currentIndex, 0),
-                              FlashcardModel.QuestionRole)
+                    text: studyController.flashcardModel.questionAt(root.currentIndex)
                     font.pixelSize: 22
                     font.bold: true
                     wrapMode: Text.WordWrap
@@ -271,9 +269,7 @@ Page {
                 }
 
                 Text {
-                    text: studyController.flashcardModel.data(
-                              studyController.flashcardModel.index(root.currentIndex, 0),
-                              FlashcardModel.AnswerRole)
+                    text: studyController.flashcardModel.answerAt(root.currentIndex)
                     wrapMode: Text.WordWrap
                     color: colorLight
                     font.pixelSize: 15

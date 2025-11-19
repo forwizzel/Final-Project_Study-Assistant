@@ -41,4 +41,17 @@ void FlashcardModel::setFlashcards(const QVector<Flashcard> &cards)
     beginResetModel();
     m_cards = cards;
     endResetModel();
+    emit countChanged();
+}
+
+QString FlashcardModel::questionAt(int index) const
+{
+    if (index < 0 || index >= m_cards.size()) return QString();
+    return m_cards.at(index).question;
+}
+
+QString FlashcardModel::answerAt(int index) const
+{
+    if (index < 0 || index >= m_cards.size()) return QString();
+    return m_cards.at(index).answer;
 }
